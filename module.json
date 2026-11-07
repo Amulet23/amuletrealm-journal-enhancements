@@ -1,0 +1,15 @@
+{
+  "id": "amuletrealm-journal-enhancements",
+  "title": "AmuletRealm Journal Enhancements",
+  "description": "GM scene links and named camera views for guided presentations to connected players.",
+  "version": "0.2.0",
+  "authors": [{"name":"AmuletRealm"}],
+  "compatibility": {"minimum":"13","verified":"13"},
+  "relationships": {"systems":[{"id":"dnd5e","type":"system"}]},
+  "esmodules": ["scripts/journal.js"],
+  "url": "https://github.com/Amulet23/amuletrealm-journal-enhancements",
+  "manifest": "https://github.com/Amulet23/amuletrealm-journal-enhancements/releases/latest/download/module.json",
+  "download": "https://github.com/Amulet23/amuletrealm-journal-enhancements/releases/download/v0.2.0/amuletrealm-journal-enhancements.zip",
+  "readme": "README.md",
+  "license": "LICENSE"
+}
