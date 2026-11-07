@@ -1,4 +1,8 @@
-# AmuletRealm Journal Enhancements v0.2.0
+# AmuletRealm Journal Enhancements
+
+**Current release:** v0.2.1
+
+**Compatibility:** Foundry VTT 13 · D&D 5e
 
 For Foundry VTT V13 and D&D 5e. The GM can use ordinary journal Scene links to open scenes or animate **saved named camera positions** on the GM and all connected player screens.
 
