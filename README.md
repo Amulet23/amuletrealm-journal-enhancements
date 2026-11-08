@@ -1,8 +1,17 @@
 # AmuletRealm Journal Enhancements
 
-**Next release:** v0.3.0  
-**Compatibility declared:** Foundry VTT 13, D&D 5e  
-**Status:** Built and syntax-checked; in-world testing of the new button is still required.
+Current release: v0.3.0
+Compatibility: Foundry VTT 14, D&D 5e
+Tested on: Foundry VTT 14 Build 369
+
+Status: Successfully tested in Foundry.
+
+Verified features:
+- Save Current View toolbar button
+- Named camera positions and zoom levels
+- Copy Journal Link dialog
+- Scene navigation from standard D&D 5e journals
+- Synchronised camera movement on GM and player screens
 
 ## Features
 
