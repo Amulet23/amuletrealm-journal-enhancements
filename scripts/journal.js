@@ -57,7 +57,7 @@ Hooks.once("ready", () => {
       await game.settings.set(MODULE_ID, "cameraViews", views);
       const link = `@UUID[Scene.${sceneId}]{${name.trim()}}`;
       console.log(`${MODULE_ID} | Saved: ${link}`);
-      ui.notifications.info(`Saved camera view “${name.trim()}”. The journal link is in the Console.`);
+      ui.notifications.info(`Saved camera view “${name.trim()}”.`);
       return link;
     },
     getViews() { return foundry.utils.deepClone(allViews()); },
@@ -123,3 +123,76 @@ Hooks.on("renderApplicationV2", (app, element) => {
     }
   }, { capture: true });
 });
+
+
+// GM-only scene-control button. Avoids opening Developer Tools, which resizes the canvas.
+Hooks.on("getSceneControlButtons", (controls) => {
+  if (!game.user?.isGM || !controls.tokens?.tools) return;
+  controls.tokens.tools.amuletrealmSaveView = {
+    name: "amuletrealmSaveView",
+    title: "AmuletRealm: Save Current View",
+    icon: "fa-solid fa-bookmark",
+    order: Object.keys(controls.tokens.tools).length,
+    button: true,
+    visible: true,
+    onChange: () => {
+      promptAndSaveView().catch(error => {
+        console.error(`${MODULE_ID} | Save dialog failed`, error);
+        ui.notifications.error("Unable to save Atlas view. See the Console for details.");
+      });
+    }
+  };
+});
+
+// Escape the link for presentation in HTML; the stored link stays unchanged.
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[char]));
+}
+
+async function promptAndSaveView() {
+  if (!game.user?.isGM) return;
+  if (!canvas?.ready || !canvas.scene) {
+    ui.notifications.warn("Open and position a scene before saving its camera view.");
+    return;
+  }
+  const DialogV2 = foundry.applications.api.DialogV2;
+  const name = await DialogV2.prompt({
+    window: { title: "AmuletRealm — Save Current View" },
+    content: `<p>Save the current centre and zoom for <strong>${escapeHtml(canvas.scene.name)}</strong>.</p>
+      <div class="form-group"><label for="amuletrealm-view-name">View name</label>
+      <input id="amuletrealm-view-name" type="text" name="viewName"
+        placeholder="e.g. Baldur's Gate" maxlength="100" required autofocus></div>`,
+    ok: {
+      label: "Save View",
+      callback: (_event, button) => button.form.elements.viewName.value.trim()
+    },
+    rejectClose: false
+  });
+  if (!name) return;
+  // Existing API persists to world settings. It preserves the link-label matching contract.
+  const link = await game.amuletrealmJournal.saveCurrentView(name);
+  await DialogV2.wait({
+    window: { title: "AmuletRealm — Journal Link" },
+    content: `<p>The view <strong>${escapeHtml(name)}</strong> has been saved.</p>
+      <p>Copy this link into your Journal Entry:</p>
+      <input type="text" name="journalLink" value="${escapeHtml(link)}" readonly
+        style="width:100%;" aria-label="Journal link">`,
+    buttons: [{
+      action: "copy", label: "Copy Link", icon: "fa-solid fa-copy", default: true,
+      callback: async (_event, button) => {
+        const value = button.form.elements.journalLink.value;
+        try {
+          await navigator.clipboard.writeText(value);
+          ui.notifications.info("Journal link copied to clipboard.");
+        } catch (error) {
+          console.warn(`${MODULE_ID} | Clipboard unavailable`, error);
+          ui.notifications.warn("Clipboard access denied. Select and copy the link from the dialog, or from the Console.");
+          throw error; // Keep the dialog open when a copy fails.
+        }
+      }
+    }, { action: "close", label: "Close" }],
+    rejectClose: false
+  });
+}
