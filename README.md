@@ -1,50 +1,61 @@
 # AmuletRealm Journal Enhancements
 
-Current release: v0.3.0
-Compatibility: Foundry VTT 14, D&D 5e
-Tested on: Foundry VTT 14 Build 369
-
-Status: Successfully tested in Foundry.
-
-Verified features:
-- Save Current View toolbar button
-- Named camera positions and zoom levels
-- Copy Journal Link dialog
-- Scene navigation from standard D&D 5e journals
-- Synchronised camera movement on GM and player screens
+**Current release:** v0.3.2 (release candidate)  
+**Verified environment:** Foundry VTT V14 Build 369, D&D 5e  
+**Status:** JavaScript syntax checked; new v0.3.2 link actions require in-world testing.
 
 ## Features
 
-- GM-only scene links in standard D&D 5e journals open the associated scene.
-- Save and recall named camera positions and zoom scales from journal scene links.
-- Synchronise GM camera presentations with connected players on the activated scene.
-- **New:** Token Controls → **AmuletRealm: Save Current View** button. Enter a name, save, and copy the generated journal link without opening Chrome Developer Tools.
+- **Save Current View** bookmark button in Token Controls saves map centre and zoom, then offers a Copy Link button.
+- **Create Scene Link** chain-link button in Token Controls offers two distinct actions: **Activate Scene** (GM and players) or **View Scene** (GM only), then Copy Link.
+- GM-controlled camera bookmarks synchronise pan and zoom with connected players when the scene is active.
+- Standard D&D 5e Journal Entry Sheet supported; Heroes of the Borderlands sheet not required.
+- Existing v0.3.x saved views and original journal links remain supported.
 
-## Installation
+## Installation or update
 
-Install via Foundry Setup → Add-on Modules → Install Module with this manifest:
+In Foundry Setup → Add-on Modules, install or update with:
 
 `https://github.com/Amulet23/amuletrealm-journal-enhancements/releases/latest/download/module.json`
 
-Enable the module in the D&D 5e world. Keep the old installed module enabled only once (update rather than installing another copy).
+Enable in your D&D 5e world. To publish a release, commit these files to `main` and create a `v0.3.2` GitHub release/tag. The existing release workflow creates `module.json` and `module.zip` assets.
 
-## How to use
+## Journal links: three separate actions
 
-1. Open the scene and adjust the zoom/pan as desired.
-2. Select **Token Controls** on the left. Choose **AmuletRealm: Save Current View** (bookmark icon).
-3. Enter a unique view name such as `Baldur's Gate` and save.
-4. Click **Copy Link** and paste the resulting `@UUID[Scene.<sceneId>]{<name>}` in the journal text editor (not in a `<pre>` or `<code>` block).
-5. Activate the Atlas for players. Clicking the link as GM will synchronise the saved camera view.
+For the existing Faerûn Atlas Scene (`BrX6ZY7hyx72ADIC`):
 
-Existing saved views in world settings remain intact across updates. Saving again with the same scene and name updates the position.
+**Activate for all players:**
 
-### Compatibility badge
+`@UUID[Scene.BrX6ZY7hyx72ADIC]{Activate Scene: Faerûn Atlas}`
 
-Foundry uses manifest `compatibility.verified` to determine compatibility badge colours. This module declares version 13 verified because the prior navigation and socket features were tested on the user's V13 world. The new UI control requires its own Foundry V13 verification after installation. A green badge is not an arbitrary colour setting.
+**View on the GM canvas only:**
+
+`@UUID[Scene.BrX6ZY7hyx72ADIC]{View Scene: Faerûn Atlas}`
+
+**Show a previously saved camera bookmark (the name must match):**
+
+`@UUID[Scene.BrX6ZY7hyx72ADIC]{Camera View: Baldur's Gate}`
+
+The action prefixes are deliberately visible in the link text and unambiguous to the module. You can also use the two toolbar buttons to generate links automatically.
+
+### Recommended presentation order
+
+1. Activate the Atlas scene for the GM and players using **Activate Scene**.
+2. Click **Camera View: Entire Faerûn** to show the whole continent.
+3. Continue to **Camera View: Sword Coast**, **Camera View: Baldur's Gate**, etc.
+
+**Important:** A camera bookmark does not activate the scene for other players. Activate it first. The module does not automatically change the active scene when a camera view is selected.
+
+### Backwards compatibility
+
+Old links such as `@UUID[Scene.BrX6ZY7hyx72ADIC]{Baldur's Gate}` still resolve to their saved camera positions. Old unlabeled scene links continue to **View Scene** unless their displayed label matches an existing saved bookmark. To eliminate name collisions, replace these with explicit **Activate Scene:** or **View Scene:** links using the toolbar.
+
+Existing saved positions are retained in the `cameraViews` world setting, without migration or deletion.
 
 ## Technical notes
 
 - Module ID: `amuletrealm-journal-enhancements`
-- GM helper API: `game.amuletrealmJournal.saveCurrentView(name)`, `.getViews()`, `.showView(name)`, `.removeView(name)`
-- Preserves Foundry V13 `getSceneControlButtons` registration and DialogV2 APIs.
-- Does not automatically activate scenes for players.
+- Socket communication enabled; camera messages are accepted only from connected GM users.
+- Scene activation uses Foundry V14's `scene.activate({pullUsers: true})`.
+- GM API includes `saveCurrentView(name)`, `getViews()`, `showView(name)`, `removeView(name)`, and `makeSceneLink(action, sceneId)`.
+- Scene-link actions are determined from an explicit label prefix. This is compatible with Foundry's `@UUID` journal enrichment but remains a convention, not a custom UUID metadata field.
