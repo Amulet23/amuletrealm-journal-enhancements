@@ -2,7 +2,7 @@
   "id": "amuletrealm-journal-enhancements",
   "title": "AmuletRealm Journal Enhancements",
   "description": "GM scene links, saved camera views and synchronised Atlas presentations for Foundry VTT.",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "socket": true,
   "authors": [
     {
@@ -10,8 +10,8 @@
     }
   ],
   "compatibility": {
-    "minimum": "13",
-    "verified": "14.369"
+    "minimum": "14",
+    "verified": "14.370"
   },
   "relationships": {
     "systems": [
