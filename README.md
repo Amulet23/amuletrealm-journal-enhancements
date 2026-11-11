@@ -1,7 +1,7 @@
 # AmuletRealm Journal Enhancements
 
-**Current release:** v0.3.2 (release candidate)  
-**Verified environment:** Foundry VTT V14 Build 369, D&D 5e  
+**Current release:** v0.3.3 (release candidate)  
+**Verified environment:** Foundry VTT v14 Build 370, D&D 5e  
 **Status:** JavaScript syntax checked; new v0.3.2 link actions require in-world testing.
 
 ## Features
