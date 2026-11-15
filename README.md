@@ -1,9 +1,10 @@
 # AmuletRealm Journal Enhancements
 
-**Current release:** v0.3.3b
-**Next planned release:** v0.3.4
+**Current release:** v0.3.4
 **Verified environment:** Foundry VTT v14 Build 370, D&D 5e
-**Status:** Scene navigation and camera synchronisation tested successfully in Heroes of the Borderlands. Macallan whisky functionality requires further testing before release.
+**Status:** Scene navigation and camera synchronisation tested in
+Heroes of the Borderlands. Macallan whisky functionality partially
+tested; further validation pending.
 
 ## Features
 
