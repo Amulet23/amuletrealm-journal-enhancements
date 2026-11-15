@@ -2,7 +2,7 @@
   "id": "amuletrealm-journal-enhancements",
   "title": "AmuletRealm Journal Enhancements",
   "description": "AmuletRealm enhancements for D&D 5e: universal journal scene links, synchronised camera views, and custom roleplaying activities.",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "socket": true,
   "authors": [
     {
